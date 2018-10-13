@@ -1,69 +1,76 @@
 <template>
   <div id="app">
-    <header class="app-header" style="display:none;" v-show="appload">
-      <div class="_effect" :class="{'_effect--50':decline}">
-        <index-header style="overflow:visible;"></index-header>
-      </div>
-    </header>
+    <welcome></welcome>
+    <div class="outter" :class="{'hideLeft':$route.path.split('/').length>2}">
+      <header class="app-header" :class="{'header-hide':!$store.state.showHeader}">
+        <wx-header></wx-header>
+      </header>
 
-    <section class="app-content" style="display:none;" v-show="appload">
-      <router-view keep-alive></router-view>
-    </section>
+      <search v-show="$route.path.indexOf('explore') === -1 && $route.path.indexOf('self') === -1"></search>
 
-    <footer class="app-footer _line-fine" style="display:none;" v-show="appload">
-        <div class="_effect " :class="{'_effect--50':decline}">
-            <index-nav></index-nav>
-        </div>
-    </footer>
+      <section class="app-content">
+        <keep-alive>
+          <router-view name="default"></router-view>
+        </keep-alive>
+      </section>
 
-    <!--mask layer--> 
-    <section class="welcome" v-show="welcome" transition="welcome"></section>
+      <footer class="app-footer">
+        <wx-nav></wx-nav>
+      </footer>
+    </div>
+
+    <transition name="custom-classes-transition" :enter-active-class="enterAnimate" :leave-active-class="leaveAnimate">
+      <router-view name="subPage" class="sub-page"></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
-import './assets/css/common.css'
-import './assets/css/base.css'
-import indexHeader from './components/index-header.vue'
-import indexNav from './components/index-nav.vue'
+import Welcome from './components/common/welcome.vue'
+import WxHeader from './components/common/wx-header'
+import Search from './components/common/search'
+import WxNav from './components/common/wx-nav'
 export default {
+  name: 'app',
   components: {
-    indexHeader,
-    indexNav
+    WxHeader,
+    WxNav,
+    Search,
+    Welcome
   },
   data () {
     return {
-      appload: false,
-      welcome: false,
-      decline: false
+      enterAnimate: '',
+      leaveAnimate: ''
     }
   },
-  created () {
-    if (this.$route.matched.length === 1) {
-      this.welcome = true
+  watch: {
+    '$route' (to, from) {
+      const toDepth = to.path.split('/').length
+      const fromDepth = from.path.split('/').length
+      if (toDepth === 2) {
+        this.$store.commit('setPageName', to.name)
+      }
+
+      if (toDepth === fromDepth) {
+        return
+      }
+      this.enterAnimate = toDepth > fromDepth ? 'animated fadeInRight' : 'animated fadeInLeft'
+      this.leaveAnimate = toDepth > fromDepth ? 'animated fadeOutLeft' : 'animated fadeOutRight'
+
+      if (toDepth === 3) {
+        this.leaveAnimate = 'animated fadeOutRight'
+      }
     }
-    this.appload = true
-    setTimeout(() => {
-      this.welcome = false
-    }, 2000)
   }
 }
-
 </script>
 
-<style scoped>
-.welcome {
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    position: fixed;
-    left: 0;
-    top: 0;
-    transition: .25s all linear;
-    background: url(./assets/images/launchimage.png) no-repeat center center;
-    background-size: cover;
-}
-.welcome-leave {
-    opacity: 0;
-}
+<style>
+  @import "assets/css/base.css";
+  @import "assets/css/common.css";
+  @import "assets/css/wx-header.css";
+  @import "assets/css/lib/iconfont.css";
+  @import "assets/css/lib/animate.css";
+  @import "assets/css/lib/weui.min.css";
 </style>

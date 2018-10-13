@@ -27,6 +27,7 @@ module.exports = {
     'no-trailing-spaces': 0,
     'padded-blocks': 0,
     'no-multiple-empty-lines': 0,
-    'key-spacing': 0
+    'key-spacing': 0,
+    'space-before-function-paren': 0
   }
 }

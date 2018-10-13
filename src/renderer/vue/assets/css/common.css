@@ -1,121 +1,98 @@
-@import 'reset.css';
-@import 'weui.min.css';
-@import 'iconfont.css';
+/*层级关系
+公共头部：3
+内容：1
+公共底部：3
+搜索栏：2
+全屏页：4
+*/
 
-/**/
-
-a,
-button,
-input,
-textarea {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+#app {
+    /*position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;*/
 }
 
-input:focus {
-    outline: none;
+#app.lock {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.outter {
+    transition: 0.5s;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    /*overflow: hidden;*/
+    /*bottom: 0;*/
+}
+
+
+/*.outter.hideLeft::before {
+    content: "";
+    z-index: 4;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3)
+}*/
+
+.outter.hideLeft {
+    opacity: 0.75;
+    transform: translate3d(-100%, 0, 0);
+    transition: 1.0s;
+    overflow: hidden;
 }
 
 body {
-    -webkit-overflow-scrolling: touch;
-    line-height: 1;
-    line-height: 1.6;
+    background: #fbf9fe;
 }
 
-html,
-body,
-#app {
-    font-family: PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Helvetica;
-    height: 100%;
-    overflow: hidden;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-*:before,
-*:after {
-    box-sizing: inherit;
-}
-
-.clearfix:before {
-    content: "";
-    display: table;
-}
-
-.clearfix:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-._full {
+.app-header {
+    /*position: absolute;*/
+    position: relative;
+    transition: 0.3s;
     width: 100%;
-    height: 100%;
-}
-
-._scroll {
-    overflow: auto;
-}
-
-._ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-._ellipsis-3 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-}
-
-._left {
-    float: left;
-}
-
-._right {
-    float: right;
-}
-
-._align-middle {
-    vertical-align: middle;
-}
-
-._align-left {
-    text-align: left;
-}
-
-._align-right {
-    text-align: right;
-}
-
-._align-center {
+    z-index: 3;
+    height: 45px;
+    line-height: 45px;
+    font-size: 17px;
+    background: linear-gradient(180deg, #303036, #3c3b40);
+    color: #fff;
     text-align: center;
 }
 
-.margin-top-0 {
-    margin-top: 0;
+.app-header.header-hide {
+    margin-top: -45px;
 }
 
-.border-top-0 {
-    border-top: 0;
+.app-content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1;
+    /*position: absolute;*/
+    /*left: 0;*/
+    padding-bottom: 49px;
+    width: 100%;
 }
 
-.padding-top-1 {
-    padding-top: 1px;
+.app-footer {
+    bottom: 0;
+    left: 0 !important;
+    width: 100%;
+    position: fixed;
+    z-index: 3;
 }
 
-
-/*1px线*/
-
-._line-fine:not(:first-child)::before {
+.app-footer:not(:first-child)::before {
     content: "";
     position: absolute;
     width: 200%;
-    left: 0;
+    left: 0px;
     top: 0;
     transform: scale(.5);
     transform-origin: 0 0;
@@ -123,15 +100,12 @@ body,
     -webkit-transform-origin: 0 0;
     background-color: #b7b7b7;
     height: 1px;
-    z-index: 2;
+    z-index: 4;
 }
 
-
-/*消息气泡*/
-
-._news-count {
+.new-msg-count {
     position: absolute;
-    font-style: initial;
+    font-style: normal;
     font-family: PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Helvetica;
     right: -9px;
     top: -5px;
@@ -142,21 +116,15 @@ body,
     height: 18px;
     line-height: 18px;
     border-radius: 9px;
-    color: #ffffff;
+    color: #fff;
     text-align: center;
     font-size: 14px;
     background-color: #f43531;
 }
 
-.app-footer ._news-count {
-    left: 100%;
-    margin-left: -10px;
-    right: initial;
-}
-
-._news-dot {
+.new-msg-dot {
     position: absolute;
-    right: -3px;
+    right: -4px;
     top: -3px;
     width: 10px;
     height: 10px;
@@ -169,228 +137,92 @@ body,
     font-size: 0;
 }
 
-
-/*weui*/
-
-.weui_cells_only::before {
-    left: 15px;
-}
-
-
-/*cell 箭头*/
-
-.weui_select_before .weui_cell_hd::before,
-.weui_panel_access .weui_panel_ft::after,
-.weui_cells_access .weui_cell_ft::after {
-    height: 11px;
-    width: 11px;
-    vertical-align: middle;
-}
-
-
-/*weui end*/
-
-
-/*
-    router-view -> transition="cover"
-    cover开头的 是router-view过渡切换是公用的样式
-    _cover-* 是会被cover 影响的元素
-*/
-
-.cover-transition {
-    opacity: 1;
-    transition: .35s opacity ease;
-}
-
-.cover-enter,
-.cover-leave {
-    opacity: .98;
-}
-
-
-/*initial route transition 1*/
-
-._cover-top {
-    position: relative;
-    z-index: 2;
-    overflow: hidden;
-    height: 45px;
-    padding: 0 15px 0 10px;
-    line-height: 45px;
-    background: linear-gradient(to bottom, #303036, #3c3b40);
-    opacity: 1;
-    color: #ffffff;
-    user-select: none;
-    -webkit-user-select: none;
-    transition: .22s all ease;
-}
-
-
-/*initial route transition 2*/
-
-._cover-top .top-title {
-    transition: .2s all ease;
-}
-
-
-/*initial route transition 3*/
-
-._cover-content {
-    position: relative;
+.sub-page {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    background: #eee;
+    height: 100%;
     width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 1;
-    transition: .2s all ease-in-out;
-    opacity: 1;
-    transform: translate3d(0%, 0, 0);
-    height: calc(100% - 45px);
-    background-color: #efeff4;
-    box-shadow: 0px 0 41px rgba(0, 0, 0, .1);
-}
-
-
-/*enter ,leaver*/
-
-
-/*route transition 1*/
-
-.cover-enter ._cover-top,
-.cover-leave ._cover-top {
-    opacity: 0;
-}
-
-
-/*route transition 2*/
-
-.cover-enter ._cover-top .top-title,
-.cover-leave ._cover-top .top-title {
-    opacity: 0;
-    transform: translate3d(50%, 0, 0);
-}
-
-
-/*route transition 3*/
-
-.cover-enter ._cover-content {
-    transform: translate3d(80%, 0, 0);
-}
-
-.cover-leave ._cover-content {
-    transition: .25s all ease;
-    transform: translate3d(100%, 0, 0);
-}
-
-
-/*
-    component- 开头的 是router-view最外层的组件元素
-*/
-
-[class*="component-"] {}
-
-
-/* 保证next page 能覆盖住 current page */
-
-._full_inner {
-    position: relative;
-    height: 100%;
+    /* overflow: hidden; */
+    right: 0;
+    left: 0;
     z-index: 5;
 }
 
-._full_router {
+.line-bottom:not(:first-child)::before {
+    content: "";
     position: absolute;
-    z-index: 10;
+    width: 200%;
+    left: 8px;
     top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
+    transform: scale(.5);
+    transform-origin: 0 0;
+    -webkit-transform: scale(.5);
+    -webkit-transform-origin: 0 0;
+    background-color: #b7b7b7;
+    height: 1px;
+    z-index: 10;
 }
 
-
-/* 子路由被激活后应用的样式 */
-
-._effect {
-    opacity: 1;
-    transition: .3s all ease;
+a {
+    cursor: pointer;
 }
 
-._effect--30 {
-    transform: translate3d(-30%, 0, 0);
+a:visited,
+a:hover {
+    color: #000;
 }
 
-._effect--50 {
-    opacity: 0;
-    transform: translate3d(-50%, 0, 0);
+.parentheses {}
+
+.parentheses:before {
+    content: "(";
 }
 
-
-/* components */
-
-
-/*top-handle.vue*/
-
-._cover-top .top-back {
-    max-width: 85px;
-    float: left;
+.parentheses:after {
+    content: ")";
 }
 
-._cover-top .top-back:active {
-    color: #bbbbbb;
+.search-open-contact {
+    top: 0;
 }
-._cover-top .top-back .icon-return-arrow{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-._cover-top .top-back .iconfont {}
 
-._cover-top .top-back .iconfont:before {
-    font-size: 20px;
+.search-open-contact .search-open {
+    margin-top: -45px;
+}
+
+.search-open-contact #wx-header {
+    top: -45px !important;
+}
+
+.weui-cell__hd {
+    margin-right: 10px;
+}
+
+.weui-cell__hd img {
+    width: 40px;
+}
+
+.gender {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
     vertical-align: middle;
+    margin-left: 4px;
+    margin-top: -5px;
 }
 
-._cover-top .top-title {
-    padding: 0 8px;
-    text-align: center;
-    overflow: hidden;
-    font-size: 18px;
-    justify-content: center;
-    text-align: center;
+.gender-male {
+    background: url("../../assets/images/contact_male.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50%;
 }
 
-._cover-top .top-title > p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-._cover-top .top-title > p .top-title__text {
-    text-align: right;
-    overflow: hidden;
-}
-
-._cover-top .top-title > p .top-title__num {
-    flex-shrink: 0;
-}
-
-._cover-top .top-title > p .icon-mute {
-    flex-basis: 18px;
-}
-
-._cover-top .top-title .icon-mute {
-    font-size: 12px;
-    color: #878689;
-    vertical-align: bottom;
-}
-
-._cover-top .top-other {
-    height: 100%;
-    max-width: 75px;
-    min-width: 50px;
-    width: auto;
-    float: right;
-}
-
-._cover-top .top-other .iconfont {
-    font-size: 24px;
+.gender-female {
+    background: url("../../assets/images/contact_female.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50%;
 }

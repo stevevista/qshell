@@ -1,52 +1,90 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store'
-import personInfo from './views/contact/person-info'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
     {
-      path: '/chat',
-      name: 'chat',
-      component: require('./views/chat').default
+      path: '/',
+      name: '微信',
+      component: require('./components/chat/chat').default
     },
     {
       path: '/chat/dialogue',
-      name: 'dialogue',
-      component: require('./views/chat/dialogue').default,
-      children: [
-        {
-          path: 'chat-detail',
-          name: 'chat-detail',
-          component: require('./views/chat/chat-detail').default,
-          children: [
-            {
-              path: 'person-info',
-              name: 'person-info',
-              component: personInfo
-            }
-          ]
-        }
-      ]
+      name: '',
+      components: {
+        default: require('./components/chat/chat').default,
+        subPage: require('./components/chat/dialogue').default
+      }
     },
     {
-      path: '/',
-      redirect: '/chat'
+      path: '/chat/dialogue/dialogue-detail',
+      name: '',
+      components: {
+        subPage: require('./components/chat/dialogue-detail').default
+      }
+    },
+    {
+      path: '/chat/add-friend',
+      name: '',
+      components: {
+        default: require('./components/chat/chat').default,
+        subPage: require('./components/contact/add-friend').default
+      }
+    },
+    {
+      path: '/contact',
+      name: '通讯录',
+      component: require('./components/contact/contact').default
+    },
+    {
+      path: '/contact/add-friend',
+      name: '',
+      components: {
+        default: require('./components/contact/contact').default,
+        subPage: require('./components/contact/add-friend').default
+      }
+    },
+    {
+      path: '/contact/details',
+      name: '',
+      components: {
+        default: require('./components/contact/contact').default,
+        subPage: require('./components/contact/details').default
+      }
+    },
+    {
+      path: '/contact/group-list',
+      name: '',
+      components: {
+        default: require('./components/contact/contact').default,
+        subPage: require('./components/contact/group-list').default
+      }
+    },
+    {
+      path: '/explore',
+      name: '发现',
+      component: require('./components/explore/explore').default
+    },
+    {
+      path: '/explore/moments',
+      name: '朋友圈',
+      components: {
+        default: require('./components/explore/explore').default,
+        subPage: require('./components/explore/moments').default
+      }
+    },
+    {
+      path: '/self',
+      name: '我',
+      component: require('./components/self/self').default
     },
     {
       path: '*',
       redirect: '/'
     }
   ]
-})
-
-router.afterEach(function (to, from) {
-  const toPath = to.path
-  const toPathEnd = toPath.lastIndexOf('/')
-  const backPath = toPath.slice(0, toPathEnd)
-  store.commit('base/setBackPath', backPath)
 })
 
 export default router
