@@ -1,0 +1,163 @@
+#app {
+  user-select: none;
+}
+
+.icon {
+    /* 通过设置 font-size 来改变图标大小 */
+    width: 1.3em; height: 1.3em;
+    /* 图标和文字相邻时，垂直对齐 */
+    vertical-align: -0.25em;
+    /* 通过设置 color 来改变 SVG 的颜色/fill */
+    fill: currentColor;
+    /* path 和 stroke 溢出 viewBox 部分在 IE 下会显示
+             normalize.css 中也包含这行 */
+    overflow: hidden;
+}
+
+#windows-bar i:hover {
+  color: #ffffff;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #6f6f6f;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+    
+.testcase-box {
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+  transition: all .2s ease-in-out;
+}
+
+.testcase-box .test-item-prop {
+  padding: 7px 8px 7px 8px;
+  border-radius: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  height: auto;
+}
+
+.testcase-box .test-name {
+  box-shadow: 0px 0px 10px #999;
+  width: 300px;
+}
+
+.testcase-box .test-success {
+  background-color: #67C23A;
+  color: black;
+}
+
+.testcase-box .test-error {
+  background-color: red;
+  color: black;
+}
+
+.testcase-box .test-running {
+    background-color: yellow;
+    color: black;
+  }
+
+.testcase-box .test-attr {
+  border: 2px dashed #dddddd;
+  font-size: 15px;
+}
+
+/* 左侧导航固定宽度 */
+#leftMenu {   
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #333;
+    border-right: 1px solid #e9e9e9;
+}
+
+/* logo样式 */
+#logo {
+    display: block;
+    margin: 20px auto;
+    -webkit-transition:all 1s;
+    -moz-transition:all 1s;
+    -o-transition:all 1s;
+    -ms-transition:all 1s;
+    transition:all 1s;
+}
+#logo:hover {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+
+
+/* 右侧宽度自适应 */
+#rightWrap {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;    
+    padding: 20px 20px 0 20px;
+    position: absolute;
+    top: 0;
+    left: 185px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+
+}
+
+.right-box {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;  
+    padding: 20px 20px 0;
+    position: absolute;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+#rightWrap .ant-menu-submenu {
+    float: right;
+}
+
+.chart-box {
+    margin-top: 30px;
+}
+
+.ege {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.ege a {
+    color: #009688;
+    font-size: 16px;
+}
+
+.lastPic {
+    display: block;
+    margin: 16% auto 0;
+}
+
+.ani-box {
+    text-align: center;
+}
+
+.doclist {
+    line-height: 40px;
+}

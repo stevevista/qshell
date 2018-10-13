@@ -1,0 +1,149 @@
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.particle circle {
+  fill: none;
+  stroke-width: 2.5px;
+}
+
+.particle {
+  fill: none;
+  stroke-width: 2.5px;
+  pointer-events: all;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.svg-rect {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.collision circle {
+  stroke: #000;
+  stroke-opacity: .5;
+}
+
+.reel .line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+.field-track,
+.field-arm {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.field-tick {
+  transition: opacity 750ms linear;
+}
+
+.field-tick:not(.field-tick--active) circle,
+.field-tick:not(.field-tick--active):first-of-type text {
+  fill: #222 !important;
+}
+
+.field-tick:not(.field-tick--active):first-of-type circle {
+  fill: #000 !important;
+}
+
+.field-tick--disabled {
+  opacity: 0;
+}
+
+.field-tick circle,
+.field-tick text {
+  transition: fill 250ms linear;
+  transition-delay: 400ms;
+}
+
+.field-tick text {
+  font: 700 14px "Helvetica Neue";
+  text-anchor: middle;
+}
+
+.editor svg {
+  background-color: #FFF;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+svg:not(.active):not(.ctrl) {
+  cursor: crosshair;
+}
+
+path.link {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  cursor: default;
+}
+
+svg:not(.active):not(.ctrl) path.link {
+  cursor: pointer;
+}
+
+path.link.selected {
+  stroke-dasharray: 10,2;
+}
+
+path.link.dragline {
+  pointer-events: none;
+}
+
+path.link.hidden {
+  stroke-width: 0;
+}
+
+circle.node {
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+circle.node.reflexive {
+  stroke: #000 !important;
+  stroke-width: 2.5px;
+}
+
+text {
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+text.id {
+  text-anchor: middle;
+  font-weight: bold;
+}
