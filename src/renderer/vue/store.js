@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import dialogues from './mock/dialogues'
 import contacts from './mock/contacts'
 import moments from './mock/moments'
+import officialAccounts from './mock/official-account'
 
 Vue.use(Vuex)
 
@@ -53,7 +54,8 @@ const state = {
   users,
   me,
   moments,
-  lastMomentUser
+  lastMomentUser,
+  officialAccounts
 }
 
 const mutations = {

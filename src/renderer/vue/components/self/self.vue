@@ -18,7 +18,7 @@
         </router-link>
       </div>
       <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link :to="{path: '/contact/album', query: {wxid: $store.state.me.wxid}}" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-my-album.png">
           </div>
@@ -52,7 +52,7 @@
         </router-link>
       </div>
       <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link :to="{path: '/self/album', query: {wxid: $store.state.me.wxid}}" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-expression.png">
           </div>

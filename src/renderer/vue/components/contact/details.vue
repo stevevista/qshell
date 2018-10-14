@@ -37,7 +37,7 @@
                     <span v-for="item in userInfo.area">{{item}}&nbsp;&nbsp;&nbsp;</span>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_access">
+            <router-link :to="{path: '/contact/album', query: {wxid: this.$route.query.wxid}}" class="weui-cell weui-cell_access">
                 <div class="weui-cell__bd">
                     <p>个人相册</p>
                 </div>
@@ -46,7 +46,7 @@
                         <img :src="item.imgSrc" style="width:50px;margin:0 5px" v-for="item in userInfo.album">
                     </div>
                 </div>
-            </div>
+            </router-link>
             <div class="weui-cell weui-cell_access">
                 <div class="weui-cell__bd">
                     <p>更多</p>

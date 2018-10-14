@@ -63,6 +63,34 @@ const router = new Router({
       }
     },
     {
+      path: '/contact/tags',
+      name: '新的朋友',
+      components: {
+        default: require('./components/contact/contact').default,
+        subPage: require('./components/contact/tags').default
+      }
+    },
+    {
+      path: '/contact/new-friends',
+      name: '',
+      components: {
+        default: require('./components/contact/contact').default,
+        subPage: require('./components/contact/new-friends').default
+      }
+    },
+    {
+      path: '/contact/album',
+      components: {
+        subPage: require('./components/contact/album').default
+      }
+    },
+    {
+      path: '/contact/official-accounts',
+      components: {
+        subPage: require('./components/contact/official-accounts').default
+      }
+    },
+    {
       path: '/explore',
       name: '发现',
       component: require('./components/explore/explore').default
@@ -79,6 +107,20 @@ const router = new Router({
       path: '/self',
       name: '我',
       component: require('./components/self/self').default
+    },
+    {
+      path: '/self/profile',
+      components: { 
+        default: require('./components/self/self').default,
+        subPage: require('./components/self/profile').default
+      }
+    },
+    {
+      path: '/self/settings',
+      components: { 
+        default: require('./components/self/self').default,
+        subPage: require('./components/self/settings').default
+      }
     },
     {
       path: '*',

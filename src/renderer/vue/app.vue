@@ -70,7 +70,7 @@ export default {
   @import "assets/css/base.css";
   @import "assets/css/common.css";
   @import "assets/css/wx-header.css";
-  @import "assets/css/lib/iconfont.css";
-  @import "assets/css/lib/animate.css";
-  @import "assets/css/lib/weui.min.css";
+  @import "assets/css/fonts/iconfont.css";
+  @import "assets/css/animate.css";
+  @import "~weui/dist/style/weui.min.css";
 </style>

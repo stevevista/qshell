@@ -8,6 +8,7 @@
       </div>
       <div class="top-name _ellipsis">{{user.displayName}}</div>
     </div>
+    <p class="sign">填坑小能手</p>
   </div>
 </template>
 
