@@ -6,7 +6,7 @@ function captureProcessRequest () {
       if (i + 1 < process.argv.length) {
         const name = process.argv[i + 1]
         const args = process.argv.slice(i + 2)
-        require(`./${name}`).default(args)
+        require(`./${name}`).default(...args)
         return true
       }
     }

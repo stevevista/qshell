@@ -8,8 +8,6 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let proceesRoutnie = captureProcessRequest()
-
-if (!proceesRoutnie) {
+if (!captureProcessRequest()) {
   require('./start')
 }

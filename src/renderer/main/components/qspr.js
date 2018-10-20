@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Timeline, Tooltip, Tabs, Icon, Button, Checkbox, Badge, Progress } from 'antd'
+import { Row, Col, Timeline, Tabs, Icon, Button, Badge, Progress, Tag } from 'antd'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-import electron from 'electron'
+import electron, { remote } from 'electron'
 import store from '../store'
+
+const { dialog } = remote
 
 const TabPane = Tabs.TabPane
 
@@ -84,44 +86,6 @@ TestTree.propTypes = {
   updates: PropTypes.number
 }
 
-class TimelineNode extends React.PureComponent {
-  render () {
-    let color = 'gray'
-    if (this.props.status === 'Failed') {
-      color = 'red'
-    } else if (this.props.status === 'Passed') {
-      color = 'green'
-    } else if (this.props.status === 'Running') {
-      color = 'yellow'
-    }
-
-    let text = [<p key="first"><b>{this.props.name}</b> {this.props.duration ? (' (' + this.props.duration + ')') : ''}</p>]
-    text = text.concat(this.props.outputs ? this.props.outputs.map((a, i) => (<p key={i}>{a.name} : {a.value}</p>)) : [])
-
-    if (this.props.runs > 1) {
-      return (
-        <Timeline.Item dot={<Badge count={this.props.runs} style={{backgroundColor: color}}/>}>
-          {text}
-        </Timeline.Item>
-      )
-    } else {
-      return (
-        <Timeline.Item color={color}>
-          {text}
-        </Timeline.Item>
-      )
-    }
-  }
-}
-
-TimelineNode.propTypes = {
-  status: PropTypes.string,
-  name: PropTypes.string,
-  duration: PropTypes.string,
-  outputs: PropTypes.array,
-  runs: PropTypes.number
-}
-
 class TestTimeline extends React.PureComponent {
   render () {
     const items = []
@@ -129,7 +93,35 @@ class TestTimeline extends React.PureComponent {
     const walkTree = (item) => {
       if (item.Unchecked) return
       if (!item.children) {
-        items.push(<TimelineNode key={item.TestIndex} status={item.Status} name={item.TestName} duration={item.Duration ? item.Duration.slice(0, 8) : null} outputs={item.outputs} runs={item.runs}/>)
+        let color = 'gray'
+        if (item.Status === 'Failed') {
+          color = 'red'
+        } else if (item.Status === 'Passed') {
+          color = 'green'
+        } else if (item.Status === 'Running') {
+          color = 'yellow'
+        }
+        let text = [<span key="first"><b>{item.TestName}</b>   </span>]
+        if (item.Duration) {
+          text.push(<Tag color="#2db7f5">{item.Duration.slice(0, 8)}</Tag>)
+        }
+        if (item.outputs) {
+          text = text.concat(item.outputs.map((a, i) => (<Tag key={i} color="#2db7f5">{a.name} : {a.value}</Tag>)))
+        }
+
+        if (item.runs > 1) {
+          items.push(
+            <Timeline.Item key={item.TestIndex} dot={<Badge count={item.runs} style={{backgroundColor: color}}/>}>
+              {text}
+            </Timeline.Item>
+          )
+        } else {
+          items.push(
+            <Timeline.Item key={item.TestIndex} color={color}>
+              {text}
+            </Timeline.Item>
+          )
+        }
       } else {
         item.children.forEach(subitem => walkTree(subitem))
       }
@@ -141,6 +133,9 @@ class TestTimeline extends React.PureComponent {
 
     return (
       <Timeline style={{marginLeft: 20}}>
+        <Timeline.Item dot={<Icon type='check-circle' style={{color: 'green'}}/>}>
+          <Tag color="#87d068">{this.props.caseRuns} / {this.props.caseCount}</Tag>
+        </Timeline.Item>
         {items}
       </Timeline>
     )
@@ -149,7 +144,10 @@ class TestTimeline extends React.PureComponent {
 
 TestTimeline.propTypes = {
   testTree: PropTypes.object,
-  updates: PropTypes.number
+  updates: PropTypes.number,
+  caseRuns: PropTypes.number,
+  caseCount: PropTypes.number,
+  progressStatus: PropTypes.string
 }
 
 class QSPR extends React.Component {
@@ -157,7 +155,15 @@ class QSPR extends React.Component {
     if (this.props.isExecuting) {
       electron.ipcRenderer.send('stopXTT', this.props.executeOptions)
     } else {
-      electron.ipcRenderer.send('executeXTT', this.props.executeOptions, this.props.runnCount)
+      dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [{name: 'XTT file', extensions: ['xtt']}]
+      }, filePaths => {
+        if (!filePaths) {
+          return
+        }
+        electron.ipcRenderer.send('executeXTT', filePaths[0], this.props.runnCount)
+      })
     }
   }
 
@@ -165,17 +171,6 @@ class QSPR extends React.Component {
     return (
       <div>
         <Button type="primary" shape="circle" icon={this.props.isExecuting ? 'pause' : 'folder-open'} style={{marginRight: 20}} onClick={this.executeXTT}/>
-        <Tooltip placement="bottom" title={this.props.intl.formatMessage({id: 'qspr.qiaImplementIssue'})}><span>
-          <Checkbox.Group options={
-            [
-              {label: 'Preload', value: 'preload'},
-              {label: 'Run in process', value: 'process'}
-            ]
-          }
-          disabled={this.props.isExecuting}
-          value={this.props.executeOptions}
-          onChange={value => this.props.setExecuteOptions(value)}/>
-        </span></Tooltip>
       </div>
     )
   }
@@ -204,14 +199,12 @@ class QSPR extends React.Component {
 
   renderTimeline = () => {
     return (
-      <Row>
-        <Col span={16}>
-          <TestTimeline testTree={this.props.testTree} updates={this.props.testTree.updates}/>
-        </Col>
-        <Col span={8}>
-          <Progress type="circle" percent={this.props.progressPercent[0]} status={this.props.progressStatus[0]} format={percent => `${this.props.runners[0].caseRuns}/${this.props.runners[0].caseCount}`} />
-        </Col>
-      </Row>
+      <TestTimeline 
+        testTree={this.props.testTree} 
+        updates={this.props.testTree.updates}
+        progressStatus={this.props.progressStatus[0]} 
+        caseRuns={this.props.runners[0].caseRuns}
+        caseCount={this.props.runners[0].caseCount}/>
     )
   }
 
@@ -367,8 +360,8 @@ export function registerXttEvents () {
     store.dispatch({type: 'qspr/updateTestTree', tree: parsedTree})
   })
 
-  electron.ipcRenderer.on('xttRunMsg', (evt, type, msg) => {
-    onXTTMessage({state: store.getState().qspr, dispatch: store.dispatch}, type, msg)
+  electron.ipcRenderer.on('xttRunMsg', (evt, id, type, msg) => {
+    onXTTMessage({state: store.getState().qspr, dispatch: store.dispatch}, id, type, msg)
   })
 }
 
@@ -384,8 +377,8 @@ export function unregisterXttEvents () {
 
 let followStack = []
 
-const onXTTMessage = ({ state, dispatch }, type, msg) => {
-  const runner = state.runners[msg._id]
+const onXTTMessage = ({ state, dispatch }, id, type, msg) => {
+  const runner = state.runners[id]
 
   if (type === 'unit_end') {
     runner.result = msg.TestResult
@@ -396,7 +389,7 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
     runner.caseCount = msg.TestCount
     runner.result = ''
 
-    if (msg._id === 0) {
+    if (id === 0) {
       if (state.xttPath === msg.xttPath) {
         // reset tree
         const reset = (node) => {
@@ -417,7 +410,7 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
       followStack = []
     }
   } else if (type === 'folder_start') {
-    if (msg._id === 0) {
+    if (id === 0) {
       let existNode
 
       if (followStack.length === 0) {
@@ -464,7 +457,7 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
       updateNode(existNode)
     }
   } else if (type === 'folder_end') {
-    if (msg._id === 0) {
+    if (id === 0) {
       const [node] = followStack.pop()
       node.runs++
       node.Status = msg.Status
@@ -472,7 +465,7 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
     }
     runner.statusText = msg.TestName
   } else if (type === 'test_start') {
-    if (msg._id === 0) {
+    if (id === 0) {
       if (followStack.length > 0) {
         let existNode
         const [parent, markpos] = followStack[followStack.length - 1]
@@ -500,7 +493,7 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
     runner.caseRuns++
     runner.statusText = msg.TestName
 
-    if (msg._id === 0) {
+    if (id === 0) {
       if (followStack.length > 0) {
         let existNode
         const [parent, markpos] = followStack[followStack.length - 1]
@@ -530,8 +523,8 @@ const onXTTMessage = ({ state, dispatch }, type, msg) => {
     }
   }
 
-  if (msg._id === 0) {
+  if (id === 0) {
     dispatch({type: 'qspr/updateTestTree', tree: parsedTree})
   }
-  dispatch({type: 'qspr/updateRunner', id: msg._id, runner})
+  dispatch({type: 'qspr/updateRunner', id: id, runner})
 }

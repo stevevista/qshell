@@ -1,15 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Layout, Menu, Badge, Icon } from 'antd'
+import { Layout, Menu, Badge } from 'antd'
 import { injectIntl } from 'react-intl'
-import IconFont from '../iconfont'
 import store from '../../store'
 import { registerDevicesEvents, unregisterDevicesEvents } from '../devices'
 import { registerXttEvents, unregisterXttEvents } from '../qspr'
 
 import menusItems from './items'
-import antdItems from './antd'
 
 const { Content, Sider } = Layout
 
@@ -81,17 +79,6 @@ class App extends React.Component {
         >
           <Menu theme="dark" defaultSelectedKeys={[menusItems[0].path]} selectedKeys={[this.props.selectedPage]} mode="inline" onSelect={this.onMenuSelect}>
             {menusItems.map(item => this.renderMenuItem(item))}
-
-            <Menu.SubMenu key="antd" title={<span><Icon type="ant-design" /><span>ANTD</span></span>}>
-              {
-                antdItems.map(item => (
-                  <Menu.Item key={item.path} onClick={() => this.toggle(item.path)}>
-                    <IconFont type="videocam"/>
-                    <span>{item.label}</span>
-                  </Menu.Item>
-                ))
-              }
-            </Menu.SubMenu>
           </Menu>
         </Sider>
         <Content>
@@ -100,11 +87,6 @@ class App extends React.Component {
               .map(item =>
                 <item.component key={item.path}/>
               )
-          }
-          {
-            antdItems.filter(item => item.path === this.props.selectedPage)
-              .map(item =>
-                <item.component key={item.path}/>)
           }
         </Content>
       </Layout>
