@@ -216,14 +216,16 @@ class QSPR extends React.Component {
           <Col span={3}/>
           <Col span={21}>
             <Progress percent={this.props.progressPercent[i]} status={this.props.progressStatus[i]} strokeWidth={20}/>
+            <div style={{top: 0, position: 'absolute', color:'#000', marginLeft: 20}}>
+              {this.props.runners[i].caseRuns}/{this.props.runners[i].caseCount},
+              {this.props.runners[i].statusText}
+            </div>
           </Col>
         </Row>
       )
     }
     return (
       <div>
-        <Progress type="circle" percent={this.props.progressPercent[0]} status={this.props.progressStatus[0]} format={percent => `${this.props.runners[0].caseRuns}/${this.props.runners[0].caseCount}`} />
-        {this.props.runners[0].statusText}
         <Row style={{marginTop: 20}}>
           <Col span={3}>
             <Button disabled={this.props.isExecuting} type="primary" shape="circle" icon="plus" size="small" style={{marginLeft: 5}} onClick={() => store.dispatch({type: 'qspr/increaseRunCount'})}/>
@@ -231,6 +233,10 @@ class QSPR extends React.Component {
           </Col>
           <Col span={21}>
             <Progress percent={this.props.progressPercent[0]} status={this.props.progressStatus[0]} strokeWidth={20}/>
+            <div style={{top: 0, position: 'absolute', color:'#000', marginLeft: 20}}>
+              {this.props.runners[0].caseRuns}/{this.props.runners[0].caseCount},
+              {this.props.runners[0].statusText}
+            </div>
           </Col>
         </Row>
         {mutiRunns}
